@@ -1,0 +1,701 @@
+{
+  "entities": {
+    "Admin": {
+      "title": "Admin",
+      "description": "Authorized ECSA election official (Current Association President or Election Chairman).",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 180
+        },
+        "fullName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "role": {
+          "type": "string",
+          "enum": ["president", "election_chairman"]
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "email", "fullName", "role", "active", "createdAt", "updatedAt"]
+    },
+    "AdminInvite": {
+      "title": "AdminInvite",
+      "description": "Pre-authorized official role slot (president or election_chairman) assigned by email.",
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": ["president", "election_chairman"]
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 180
+        },
+        "fullName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "invitedBy": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["role", "email", "fullName", "invitedBy", "createdAt", "updatedAt"]
+    },
+    "Student": {
+      "title": "Student",
+      "description": "Private student voter registration record with PBKDF2-hashed surname credential.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "fullName": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 140
+        },
+        "matric": {
+          "type": "string",
+          "minLength": 9,
+          "maxLength": 9,
+          "pattern": "^[0-9]{9}$"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 180
+        },
+        "level": {
+          "type": "string",
+          "enum": ["100", "200", "300", "400", "500"]
+        },
+        "department": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "surnameHash": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "surnameSalt": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 64
+        },
+        "verifiedByRoll": {
+          "type": "boolean"
+        },
+        "registeredAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "fullName",
+        "matric",
+        "email",
+        "level",
+        "department",
+        "surnameHash",
+        "surnameSalt",
+        "verifiedByRoll",
+        "registeredAt"
+      ]
+    },
+    "MatricIndex": {
+      "title": "MatricIndex",
+      "description": "Atomic uniqueness lock preventing duplicate 9-digit matriculation numbers.",
+      "type": "object",
+      "properties": {
+        "matric": {
+          "type": "string",
+          "minLength": 9,
+          "maxLength": 9,
+          "pattern": "^[0-9]{9}$"
+        },
+        "ownerUid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["matric", "ownerUid", "createdAt"]
+    },
+    "EmailIndex": {
+      "title": "EmailIndex",
+      "description": "Atomic uniqueness lock preventing duplicate student email addresses using SHA-256 hash.",
+      "type": "object",
+      "properties": {
+        "emailHash": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "ownerUid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["emailHash", "ownerUid", "createdAt"]
+    },
+    "EligibleVoter": {
+      "title": "EligibleVoter",
+      "description": "Approved ECSA matriculation entry in the administrator-managed voter register.",
+      "type": "object",
+      "properties": {
+        "matric": {
+          "type": "string",
+          "minLength": 9,
+          "maxLength": 9,
+          "pattern": "^[0-9]{9}$"
+        },
+        "expectedLevel": {
+          "type": "string",
+          "enum": ["100", "200", "300", "400", "500"]
+        },
+        "department": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "addedBy": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["matric", "expectedLevel", "department", "active", "addedBy", "createdAt"]
+    },
+    "RejectedAttempt": {
+      "title": "RejectedAttempt",
+      "description": "Audit record of rejected voter verification or unauthorized matriculation attempts.",
+      "type": "object",
+      "properties": {
+        "attemptId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "userUid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "matric": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "attemptedLevel": {
+          "type": "string",
+          "maxLength": 10
+        },
+        "department": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 240
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["attemptId", "userUid", "matric", "attemptedLevel", "department", "reason", "createdAt"]
+    },
+    "Election": {
+      "title": "Election",
+      "description": "Election cycle configuration, status, ballot mode, and results publication controls.",
+      "type": "object",
+      "properties": {
+        "electionId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 160
+        },
+        "academicSession": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 32
+        },
+        "status": {
+          "type": "string",
+          "enum": ["not_started", "ongoing", "completed"]
+        },
+        "ballotMode": {
+          "type": "string",
+          "enum": ["per_position", "compulsory_all"]
+        },
+        "resultsMode": {
+          "type": "string",
+          "enum": ["after_publish", "live"]
+        },
+        "resultsPublished": {
+          "type": "boolean"
+        },
+        "requireVoterRoll": {
+          "type": "boolean"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "createdBy": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "electionId",
+        "title",
+        "academicSession",
+        "status",
+        "ballotMode",
+        "resultsMode",
+        "resultsPublished",
+        "requireVoterRoll",
+        "isActive",
+        "createdBy",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Position": {
+      "title": "Position",
+      "description": "Elective office in an election, capping candidateCount strictly between 0 and 10.",
+      "type": "object",
+      "properties": {
+        "positionId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "electionId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "displayOrder": {
+          "type": "integer"
+        },
+        "candidateCount": {
+          "type": "integer"
+        },
+        "createdBy": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "positionId",
+        "electionId",
+        "title",
+        "description",
+        "displayOrder",
+        "candidateCount",
+        "createdBy",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Candidate": {
+      "title": "Candidate",
+      "description": "Approved aspirant contesting a specific position in an election.",
+      "type": "object",
+      "properties": {
+        "candidateId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "electionId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "positionId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "positionTitle": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "fullName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 140
+        },
+        "politicalName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "academicLevel": {
+          "type": "string",
+          "enum": ["100", "200", "300", "400", "500"]
+        },
+        "department": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "manifesto": {
+          "type": "string",
+          "maxLength": 12000
+        },
+        "photoUrl": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "manifestoPdfUrl": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "approvalStatus": {
+          "type": "string",
+          "enum": ["approved", "pending"]
+        },
+        "registeredBy": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "registeredByName": {
+          "type": "string",
+          "maxLength": 140
+        },
+        "updatedBy": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "dateRegistered": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "candidateId",
+        "electionId",
+        "positionId",
+        "positionTitle",
+        "fullName",
+        "politicalName",
+        "academicLevel",
+        "department",
+        "manifesto",
+        "photoUrl",
+        "manifestoPdfUrl",
+        "approvalStatus",
+        "registeredBy",
+        "registeredByName",
+        "updatedBy",
+        "dateRegistered",
+        "updatedAt"
+      ]
+    },
+    "Tally": {
+      "title": "Tally",
+      "description": "Anonymous aggregate real-time vote counter per candidate with rule-enforced publication visibility.",
+      "type": "object",
+      "properties": {
+        "candidateId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "electionId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "positionId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "votes": {
+          "type": "integer"
+        },
+        "affirmVotes": {
+          "type": "integer"
+        },
+        "rejectVotes": {
+          "type": "integer"
+        },
+        "resultsVisible": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "candidateId",
+        "electionId",
+        "positionId",
+        "votes",
+        "affirmVotes",
+        "rejectVotes",
+        "resultsVisible"
+      ]
+    },
+    "VoteReceipt": {
+      "title": "VoteReceipt",
+      "description": "Immutable per-voter per-position receipt enforcing single vote without storing candidate choice.",
+      "type": "object",
+      "properties": {
+        "receiptId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "electionId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "positionId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "voterUid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "castAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["receiptId", "electionId", "positionId", "voterUid", "castAt"]
+    },
+    "Ballot": {
+      "title": "Ballot",
+      "description": "Immutable anonymous ballot record containing zero voter identity or PII fields.",
+      "type": "object",
+      "properties": {
+        "ballotId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "electionId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "positionId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "candidateId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "choice": {
+          "type": "string",
+          "enum": ["vote", "affirm", "reject"]
+        }
+      },
+      "required": ["ballotId", "electionId", "positionId", "candidateId", "choice"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Immutable administrative action log tracking election and candidate management.",
+      "type": "object",
+      "properties": {
+        "logId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "adminUid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "adminEmail": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 180
+        },
+        "adminRole": {
+          "type": "string",
+          "enum": ["president", "election_chairman", "super_admin"]
+        },
+        "action": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "targetId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "details": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["logId", "adminUid", "adminEmail", "adminRole", "action", "targetId", "details", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/admins/{uid}": {
+      "schema": { "$ref": "#/entities/Admin" },
+      "description": "Authorized official accounts (President & Election Chairman)."
+    },
+    "/adminInvites/{roleId}": {
+      "schema": { "$ref": "#/entities/AdminInvite" },
+      "description": "Pre-authorized role slots keyed by role name (president or election_chairman)."
+    },
+    "/students/{uid}": {
+      "schema": { "$ref": "#/entities/Student" },
+      "description": "Private student voter records isolated to owner and admins."
+    },
+    "/matricIndex/{matric}": {
+      "schema": { "$ref": "#/entities/MatricIndex" },
+      "description": "Atomic uniqueness lock per 9-digit matriculation number."
+    },
+    "/emailIndex/{emailHash}": {
+      "schema": { "$ref": "#/entities/EmailIndex" },
+      "description": "Atomic uniqueness lock per SHA-256 email hash."
+    },
+    "/eligibleVoters/{matric}": {
+      "schema": { "$ref": "#/entities/EligibleVoter" },
+      "description": "Admin-managed approved ECSA matriculation voter register."
+    },
+    "/rejectedAttempts/{attemptId}": {
+      "schema": { "$ref": "#/entities/RejectedAttempt" },
+      "description": "Audit trail of rejected voter verification attempts."
+    },
+    "/elections/{electionId}": {
+      "schema": { "$ref": "#/entities/Election" },
+      "description": "Election definitions, status, and publication settings."
+    },
+    "/positions/{positionId}": {
+      "schema": { "$ref": "#/entities/Position" },
+      "description": "Elective positions with database-enforced candidateCount <= 10."
+    },
+    "/candidates/{candidateId}": {
+      "schema": { "$ref": "#/entities/Candidate" },
+      "description": "Registered aspirants contesting elective positions."
+    },
+    "/tallies/{candidateId}": {
+      "schema": { "$ref": "#/entities/Tally" },
+      "description": "Real-time aggregate candidate vote tallies gated by resultsVisible."
+    },
+    "/voteReceipts/{receiptId}": {
+      "schema": { "$ref": "#/entities/VoteReceipt" },
+      "description": "Immutable voter-position voting receipts without candidate choice."
+    },
+    "/ballots/{ballotId}": {
+      "schema": { "$ref": "#/entities/Ballot" },
+      "description": "Immutable anonymous ballots without voter identity."
+    },
+    "/auditLogs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Immutable administrative audit logs."
+    }
+  }
+}
