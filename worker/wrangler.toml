@@ -1,0 +1,17 @@
+name = "ecsa-election-api"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ecsa-election-db"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "FILES"
+bucket_name = "ecsa-election-files"
+
+[vars]
+ALLOWED_ORIGIN = "https://YOUR-GITHUB-USERNAME.github.io"
+SESSION_DAYS = "2"

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#102b52">
+  <title>ECSA | Online E-Voting</title>
+  <meta name="description" content="A transparent, accessible and accountable student election platform for the ECSA election at Adekunle Ajasin University.">
+  <meta property="og:title" content="ECSA | Online E-Voting">
+  <meta property="og:description" content="A transparent, accessible and accountable student election platform for the ECSA election at Adekunle Ajasin University.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-mark">E</span><span><b>ECSA</b><small>ONLINE E-VOTING</small></span></a>
+    <nav><button class="nav-link" data-view="home">Home</button><button class="nav-link" data-view="manifestos">Manifestos</button><button class="nav-link" data-view="results">Results</button></nav>
+    <div class="top-actions"><span id="whoami"></span><button id="logoutBtn" class="btn btn-outline hidden">Sign out</button></div>
+  </header>
+  <main>
+    <section id="home" class="view active">
+      <div class="hero">
+        <div class="hero-copy"><span class="eyebrow">ADEKUNLE AJASIN UNIVERSITY</span><h1>Your voice.<br><em>Your choice.</em><br>Your ECSA.</h1><p>A transparent, accessible and accountable platform for the ECSA election.</p><div class="hero-actions"><button class="btn btn-primary" data-view="register">Register to vote</button><button class="btn btn-outline" data-view="login">Student login</button></div></div>
+        <div class="hero-panel"><div class="seal">ECSA</div><h3>Building Foundations for Lifelong Learning</h3><p>Vote responsibly. Make your choice count.</p><div id="electionStatus" class="status-pill">Checking election status…</div></div>
+      </div>
+      <div class="feature-grid"><article><b>01</b><h3>One student, one vote</h3><p>Voting controls prevent a second ballot for the same position.</p></article><article><b>02</b><h3>Know your candidates</h3><p>Review candidate profiles and manifestos before making a decision.</p></article><article><b>03</b><h3>Transparent process</h3><p>Results are shown according to the election publication settings.</p></article></div>
+    </section>
+
+    <section id="register" class="view narrow">
+      <div class="section-heading"><span class="eyebrow">VOTER ACCESS</span><h2>Student registration</h2><p>Complete all four fields. Your surname will be your initial password.</p></div>
+      <form id="registerForm" class="panel form-grid">
+        <label>Full name<input name="fullName" required autocomplete="name" placeholder="e.g. John Michael Adewale"></label>
+        <label>Matriculation number<input name="matric" required inputmode="numeric" pattern="[0-9]{9}" maxlength="9" placeholder="9 numeric digits"></label>
+        <label>Email address<input name="email" required type="email" autocomplete="email" placeholder="you@example.com"></label>
+        <label>Academic level<select name="level" required><option value="">Select level</option><option>100</option><option>200</option><option>300</option><option>400</option><option>500</option></select></label>
+        <p class="notice full">Your initial password is the last word in your full name. Change it after your first login if password-change functionality is enabled by the election administrators.</p>
+        <button class="btn btn-primary full">Submit registration</button>
+      </form>
+    </section>
+
+    <section id="login" class="view narrow">
+      <div class="section-heading"><span class="eyebrow">WELCOME BACK</span><h2>Student login</h2><p>Sign in with your matriculation number and surname.</p></div>
+      <form id="loginForm" class="panel form-grid">
+        <label class="full">Matriculation number<input name="matric" required inputmode="numeric" pattern="[0-9]{9}" maxlength="9"></label>
+        <label class="full">Password<div class="password-wrap"><input name="password" id="loginPassword" type="password" required><button type="button" id="togglePassword" class="show-password">Show</button></div></label>
+        <button class="btn btn-primary full">Sign in</button>
+      </form>
+    </section>
+
+    <section id="dashboard" class="view">
+      <div class="section-heading"><span class="eyebrow">VOTER DASHBOARD</span><h2 id="studentGreeting">Your voting dashboard</h2><p id="studentMeta"></p></div>
+      <div id="votingArea"></div>
+    </section>
+
+    <section id="manifestos" class="view">
+      <div class="section-heading"><span class="eyebrow">MAKE AN INFORMED CHOICE</span><h2>Candidate manifestos</h2><p>Read candidates' plans, priorities and commitments before voting.</p></div>
+      <div id="manifestoGrid" class="candidate-grid"></div>
+    </section>
+
+    <section id="results" class="view">
+      <div class="section-heading"><span class="eyebrow">ELECTION TRANSPARENCY</span><h2>Election results</h2><p id="resultsMessage">Results availability is controlled by the election administrators.</p></div>
+      <div id="resultsArea"></div>
+    </section>
+
+    <section id="adminLogin" class="view narrow">
+      <div class="section-heading"><span class="eyebrow">RESTRICTED AREA</span><h2>Election officials</h2><p>Only the authorized ECSA President and Election Chairman may sign in.</p></div>
+      <form id="adminLoginForm" class="panel form-grid"><label class="full">Official email<input name="email" type="email" required></label><label class="full">Password<input name="password" type="password" required></label><button class="btn btn-primary full">Administrator sign in</button></form>
+    </section>
+
+    <section id="admin" class="view">
+      <div class="section-heading"><span class="eyebrow">ELECTION CONTROL CENTRE</span><h2>Administrator dashboard</h2><p id="adminMeta">Authorized election officials only.</p></div>
+      <div class="admin-layout">
+        <aside class="admin-tabs"><button data-admin-tab="candidates" class="selected">Aspirants</button><button data-admin-tab="positions">Positions</button><button data-admin-tab="election">Election settings</button><button data-admin-tab="stats">Statistics</button></aside>
+        <div id="adminContent" class="panel"></div>
+      </div>
+    </section>
+  </main>
+  <footer><b>ECSA</b> · Building Foundations for Lifelong Learning <span>Secure student election platform</span></footer>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="config.js"></script><script src="app.js"></script>
+</body>
+</html>
